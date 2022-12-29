@@ -5,7 +5,7 @@
       v-for="(week, index) in weekNum" :key="'week' + index" 
       ref="weekBoard"
       class="my-2 border-2 border-black"
-      @drop="onDrop(week)"
+      @drop="isStartDrag=!isStartDrag;onDrop(week);dragOverStyle($event);"
       @dragover.prevent
       @dragenter.prevent
       >
@@ -16,9 +16,10 @@
           <ShowCard 
           :card-data="data"
           :draggable="isDragAble"
-          @dragstart="startDrag($event,data,i,week)"
-          @dragover.prevent
-          @dragenter="dropEnterMove(i)"
+          :start-drag="isStartDrag"
+          @dragstart="isStartDrag=!isStartDrag;startDrag($event,data,i,week);"
+          @dragenter.self="dragEnterMove(i);dragOverStyle($event)"
+          @dragleave="dragLeaveStyle($event)"
           />
         </div>
         </div>
@@ -28,7 +29,7 @@
     <div 
     class="col-span-3 border-2 border-black ml-1 my-2 bg-purple-400"
     ref="pileBoard"
-    @drop="onDrop(week)"
+    @drop="isStartDrag=!isStartDrag;onDrop(week);dragOverStyle($event);"
     @dragover.prevent
     @dragenter.prevent
     >
@@ -37,9 +38,10 @@
         <ShowCard 
         :card-data="data"
         :draggable="isDragAble"
-        @dragstart="startDrag($event,data,i,week)"
-        @dragover.prevent
-        @dragenter="dropEnterMove(i)"
+        :start-drag="isStartDrag"
+        @dragstart="isStartDrag=!isStartDrag;startDrag($event,data,i,week);"
+        @dragenter.self="dragEnterMove(i);dragOverStyle($event)"
+        @dragleave="dragLeaveStyle($event)"
         />
       </div> 
       
@@ -54,6 +56,7 @@
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 import ShowCard from "./components/ShowCard.vue";
+const isStartDrag = ref(false);
 const pileData = ref([
   {
     className: 'refactor',
@@ -345,7 +348,7 @@ let tempData=
 };
 let dropIndex = null;
 function startDrag(e,data,index,week){
-  
+  console.log("drag",isStartDrag.value)
   e.dataTransfer.dropEffect = 'move';
   e.dataTransfer.effectAllowed = 'move';
   tempData.tempInfo = data;
@@ -356,7 +359,7 @@ function startDrag(e,data,index,week){
 function writeDropIndex(index){
   dropIndex = index;
 }
-function dropEnterMove(index){
+function dragEnterMove(index){
   writeDropIndex(index);
 }
 function spliceDragData(){
@@ -386,6 +389,14 @@ function onDrop(week){
   dropIndex = null;
   saveDataToLoclStorage()
 }
+function dragLeaveStyle(e){
+  e.target.classList.remove("dragOverStyle");
+ }
+ function dragOverStyle(e){
+  e.target.classList.add("dragOverStyle");
+  
+ }
+ const isbooleantest = ref(true)
 function saveDataToLoclStorage(){
   localStorage.setItem('pileData',JSON.stringify(pileData.value));
   localStorage.setItem('beShowedData',JSON.stringify(beShowedData.value));
@@ -412,7 +423,7 @@ onMounted(() => {
 
 
 <style scoped>
-.bg-active {
+.dragOverStyle {
     opacity: 0.7;
 }
 </style>
