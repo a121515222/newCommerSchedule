@@ -5,7 +5,7 @@
       v-for="(week, index) in weekNum" :key="'week' + index" 
       ref="weekBoard"
       class="my-2 border-2 border-black"
-      @drop="isStartDrag=!isStartDrag;onDrop(week);dragOverStyle($event);"
+      @drop="isStartDrag=!isStartDrag;onDrop(week);"
       @dragover.prevent
       @dragenter.prevent
       >
@@ -18,8 +18,9 @@
           :draggable="isDragAble"
           :start-drag="isStartDrag"
           @dragstart="isStartDrag=!isStartDrag;startDrag($event,data,i,week);"
-          @dragenter.self="dragEnterMove(i);dragOverStyle($event)"
+          @dragenter.self="writeDropIndex(i);dragOverStyle($event)"
           @dragleave="dragLeaveStyle($event)"
+          @drop="dragLeaveStyle($event);"
           />
         </div>
         </div>
@@ -29,7 +30,7 @@
     <div 
     class="col-span-3 border-2 border-black ml-1 my-2 bg-purple-400"
     ref="pileBoard"
-    @drop="isStartDrag=!isStartDrag;onDrop(week);dragOverStyle($event);"
+    @drop="isStartDrag=!isStartDrag;onDrop(week);"
     @dragover.prevent
     @dragenter.prevent
     >
@@ -40,8 +41,9 @@
         :draggable="isDragAble"
         :start-drag="isStartDrag"
         @dragstart="isStartDrag=!isStartDrag;startDrag($event,data,i,week);"
-        @dragenter.self="dragEnterMove(i);dragOverStyle($event)"
+        @dragenter.self="writeDropIndex(i);dragOverStyle($event)"
         @dragleave="dragLeaveStyle($event)"
+        @drop="dragLeaveStyle($event);"
         />
       </div> 
       
@@ -348,19 +350,14 @@ let tempData=
 };
 let dropIndex = null;
 function startDrag(e,data,index,week){
-  console.log("drag",isStartDrag.value)
   e.dataTransfer.dropEffect = 'move';
   e.dataTransfer.effectAllowed = 'move';
   tempData.tempInfo = data;
   tempData.tempWeek = week;
   tempData.tempIndex = index;
-  
 }
 function writeDropIndex(index){
   dropIndex = index;
-}
-function dragEnterMove(index){
-  writeDropIndex(index);
 }
 function spliceDragData(){
   if(tempData.tempWeek){
