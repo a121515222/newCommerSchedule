@@ -1,8 +1,7 @@
 
 <template>
     <div 
-    class="border-2 border-black rounded-lg m-1 p-2 w-auto"
-    :class="{ 'bg-slate-200': !props.startDrag}"
+    class="border-2 border-black rounded-lg m-1 p-2 w-auto bg-slate-200"
     >
     <div :class="{'dragStartPointEventNone':props.startDrag}">
         <h2>{{ props.cardData.className }}</h2>
