@@ -3,7 +3,7 @@
     <div 
     class="border-2 border-black rounded-lg m-1 p-2 w-auto bg-slate-200"
     >
-    <div :class="{'dragStartPointEventNone':props.startDrag}">
+    <div :class="{'pointer-events-none':props.startDrag}">
         <h2>{{ props.cardData.className }}</h2>
         <h2>{{ props.cardData.classType }}</h2>
         <div class="flex gap-1">
@@ -18,8 +18,3 @@
 import { watch } from 'vue';
 const props = defineProps(["cardData","startDrag"])
 </script>
-<style scoped>
-.dragStartPointEventNone {
-    pointer-events: none;
-}
-</style>
