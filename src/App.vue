@@ -416,9 +416,6 @@ onMounted(() => {
 
 })
 </script>
-
-
-
 <style scoped>
 .dragOverStyle {
     opacity: 0.7;
